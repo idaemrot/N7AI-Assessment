@@ -737,6 +737,57 @@ body {
   cursor: not-allowed;
 }
 
+/* ── Inline delete confirmation ─────────────────────────────────────────── */
+.doc-confirm-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.doc-confirm-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-500);
+}
+
+.doc-confirm-cancel,
+.doc-confirm-yes {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  padding: 3px 9px;
+  border: var(--border-hair) solid;
+  transition: background 0.1s;
+}
+
+.doc-confirm-cancel {
+  color: var(--gray-600);
+  background: transparent;
+  border-color: var(--gray-300);
+}
+
+.doc-confirm-cancel:hover {
+  background: var(--gray-100);
+}
+
+.doc-confirm-yes {
+  color: var(--red-600);
+  background: transparent;
+  border-color: var(--red-200);
+}
+
+.doc-confirm-yes:hover:not(:disabled) {
+  background: var(--red-50);
+}
+
+.doc-confirm-yes:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    STATE WELLS — loading / empty / error
 ───────────────────────────────────────────────────────────────────────── */

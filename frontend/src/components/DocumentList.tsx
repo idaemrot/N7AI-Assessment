@@ -14,8 +14,9 @@ export default function DocumentList({
   onDelete,
   deletingId,
 }: DocumentListProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
-  const [overflowIds, setOverflowIds]  = useState<Set<number>>(new Set());
+  const [expandedIds,   setExpandedIds]   = useState<Set<number>>(new Set());
+  const [overflowIds,   setOverflowIds]   = useState<Set<number>>(new Set());
+  const [confirmingId,  setConfirmingId]  = useState<number | null>(null);
 
   // Map of content element refs keyed by document id
   const contentRefs = useRef<Map<number, HTMLParagraphElement>>(new Map());
@@ -61,15 +62,34 @@ export default function DocumentList({
               </div>
 
               {isAdmin && (
-                <button
-                  id={`delete-doc-${doc.id}`}
-                  className="doc-delete-btn"
-                  onClick={() => onDelete(doc.id)}
-                  disabled={deletingId === doc.id}
-                  aria-label={`Delete document ${doc.title}`}
-                >
-                  {deletingId === doc.id ? 'Deleting…' : 'Delete'}
-                </button>
+                confirmingId === doc.id ? (
+                  <span className="doc-confirm-row">
+                    <span className="doc-confirm-label">Delete?</span>
+                    <button
+                      className="doc-confirm-cancel"
+                      onClick={() => setConfirmingId(null)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="doc-confirm-yes"
+                      onClick={() => { setConfirmingId(null); onDelete(doc.id); }}
+                      disabled={deletingId === doc.id}
+                    >
+                      {deletingId === doc.id ? 'Deleting…' : 'Yes'}
+                    </button>
+                  </span>
+                ) : (
+                  <button
+                    id={`delete-doc-${doc.id}`}
+                    className="doc-delete-btn"
+                    onClick={() => setConfirmingId(doc.id)}
+                    disabled={deletingId === doc.id}
+                    aria-label={`Delete document ${doc.title}`}
+                  >
+                    Delete
+                  </button>
+                )
               )}
             </div>
 
