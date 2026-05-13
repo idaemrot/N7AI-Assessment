@@ -15,7 +15,6 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
 
-    // ── Basic client-side validation ───────────────────────────────────────
     if (!email.trim() || !password.trim()) {
       setError('Email and password are required.');
       return;
@@ -25,7 +24,6 @@ export default function LoginPage() {
       await login({ email: email.trim(), password });
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      // Surface the server's message when available; fall back to generic text.
       if (isAxiosError(err) && err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
@@ -35,54 +33,61 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-card">
-        <h1 className="login-title">Sign in</h1>
-        <p className="login-subtitle">N7AI Assessment Portal</p>
+    <div className="login-page">
 
-        <form className="login-form" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-            />
-          </div>
-
-          {error && (
-            <p className="login-error" role="alert">
-              {error}
-            </p>
-          )}
-
-          <button
-            id="login-submit"
-            type="submit"
-            className="login-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing in…' : 'Sign in'}
-          </button>
-        </form>
+      {/* ── Left panel ─────────────────────────────────────────────────── */}
+      <div className="login-panel">
+        <p className="login-panel-label">Document Portal</p>
+        <p className="login-panel-tagline">Manage your documents in one place.</p>
       </div>
+
+      {/* ── Right panel — form ──────────────────────────────────────────── */}
+      <div className="login-form-panel">
+        <div className="login-form-inner">
+          <h1 className="login-heading">Sign in</h1>
+
+          <form className="login-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+
+            {error && (
+              <p className="login-error" role="alert">{error}</p>
+            )}
+
+            <button
+              id="login-submit"
+              type="submit"
+              className="login-btn"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in…' : 'Sign in'}
+            </button>
+          </form>
+        </div>
+      </div>
+
     </div>
   );
 }

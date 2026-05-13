@@ -1,5 +1,5 @@
 -- ============================================================
--- N7AI Assessment – Database Schema
+-- Document Portal – Database Schema
 -- Target: PostgreSQL 14+ (Neon serverless)
 -- ============================================================
 
