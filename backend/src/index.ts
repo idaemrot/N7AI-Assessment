@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import authRoutes from './routes/authRoutes';
-// import documentRoutes from './routes/documentRoutes'; // enabled in next phase
+import documentRoutes from './routes/documentRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,7 +16,7 @@ app.use(express.json());
 
 // ── Routes ─────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
-// app.use('/api/documents', documentRoutes); // enabled in next phase
+app.use('/api/documents', documentRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
