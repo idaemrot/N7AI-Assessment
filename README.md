@@ -1,223 +1,257 @@
-# Document Portal
+  # Document Portal
 
-## 1. Project Overview
+  A full-stack document management system with JWT-based authentication and middleware-enforced role-based access control (RBAC).
 
-A role-based document management system built as a full-stack assignment submission.
+  **Live**
 
-Users authenticate via JWT. After login, access to documents is controlled by role: **ADMIN** can create and delete documents; **USER** has read-only access. Authorization is enforced at the backend middleware layer — not just in the UI.
+  | | URL |
+  |--|-----|
+  | Frontend | [docportal-zeta.vercel.app](https://docportal-zeta.vercel.app/login) |
+  | Backend API | [n7ai-assessment.onrender.com](https://n7ai-assessment.onrender.com) |
 
----
+  ---
 
-## 2. Tech Stack
+  ## Tech Stack
 
-**Frontend**
-- React 18
-- TypeScript
-- Vite
+  | Layer | Technology |
+  |-------|-----------|
+  | Frontend | React 18, TypeScript, Vite |
+  | HTTP Client | Axios |
+  | Routing | React Router v6 |
+  | Backend | Node.js, Express, TypeScript |
+  | Database | PostgreSQL (Neon serverless) via `pg` driver |
+  | Auth | JWT (`jsonwebtoken`), bcrypt password hashing |
+  | RBAC | Custom Express middleware (`protect`, `requireRole`) |
 
-**Backend**
-- Node.js
-- Express
-- TypeScript
+  ---
 
-**Database**
-- PostgreSQL via [Neon](https://neon.tech) (serverless)
-- `pg` driver — no ORM
+  ## Folder Structure
 
-**Authentication**
-- JWT (`jsonwebtoken`)
-- `bcrypt` for password hashing
+  ```
+  N7AI Assessment/
+  ├── backend/
+  │   ├── src/
+  │   │   ├── controllers/
+  │   │   │   ├── authController.ts       # POST /api/auth/login
+  │   │   │   └── documentController.ts  # GET / POST / DELETE /api/documents
+  │   │   ├── db/
+  │   │   │   ├── pool.ts                 # pg connection pool
+  │   │   │   ├── schema.sql              # Table definitions (run first)
+  │   │   │   └── seed.sql                # Test users (run after schema)
+  │   │   ├── middleware/
+  │   │   │   └── authMiddleware.ts       # protect + requireRole
+  │   │   ├── routes/
+  │   │   │   ├── authRoutes.ts
+  │   │   │   └── documentRoutes.ts
+  │   │   ├── types/                      # Shared backend type definitions
+  │   │   └── index.ts                    # Express entry point + API reference page
+  │   ├── .env                            # (not committed) — see .env.example
+  │   ├── .env.example
+  │   ├── package.json
+  │   └── tsconfig.json
+  │
+  ├── frontend/
+  │   ├── src/
+  │   │   ├── components/
+  │   │   │   ├── CategoryFilter.tsx      # Filter pill row
+  │   │   │   ├── CreateDocumentForm.tsx  # ADMIN-only create form
+  │   │   │   ├── DocumentList.tsx        # Card list with expand / delete
+  │   │   │   └── PrivateRoute.tsx        # JWT-protected route wrapper
+  │   │   ├── context/
+  │   │   │   └── AuthContext.tsx         # Auth state + login / logout
+  │   │   ├── pages/
+  │   │   │   ├── LoginPage.tsx
+  │   │   │   └── DashboardPage.tsx
+  │   │   ├── services/
+  │   │   │   ├── api.ts                  # Axios instance with JWT interceptor
+  │   │   │   ├── authService.ts
+  │   │   │   └── documentService.ts
+  │   │   ├── types/                      # Shared frontend type definitions
+  │   │   ├── App.tsx                     # Route tree
+  │   │   ├── main.tsx
+  │   │   └── index.css                   # Full design system (tokens + dark mode)
+  │   ├── .env                            # (not committed) — see .env.example
+  │   ├── .env.example
+  │   ├── index.html
+  │   ├── package.json
+  │   └── vite.config.ts
+  │
+  └── README.md
+  ```
 
----
+  ---
 
-## 3. Folder Structure
+  ## Prerequisites
 
-```
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   │   ├── authController.ts       # Login logic
-│   │   │   └── documentController.ts  # GET, POST, DELETE handlers
-│   │   ├── db/
-│   │   │   ├── pool.ts                 # pg connection pool
-│   │   │   ├── schema.sql              # Table definitions
-│   │   │   └── seed.sql                # Test user inserts
-│   │   ├── middleware/
-│   │   │   └── authMiddleware.ts       # protect + requireRole
-│   │   ├── routes/
-│   │   │   ├── authRoutes.ts
-│   │   │   └── documentRoutes.ts
-│   │   ├── types/                      # Backend type definitions
-│   │   └── index.ts                    # Express app entry point
-│   ├── .env                            # Not committed
-│   └── .env.example
-│
-└── frontend/
-    ├── src/
-    │   ├── components/
-    │   │   ├── CategoryFilter.tsx      # Category filter pills
-    │   │   ├── CreateDocumentForm.tsx  # ADMIN-only create form
-    │   │   ├── DocumentList.tsx        # Document cards with expand/delete
-    │   │   └── PrivateRoute.tsx        # Redirects unauthenticated users
-    │   ├── context/
-    │   │   └── AuthContext.tsx         # Auth state, login, logout
-    │   ├── pages/
-    │   │   ├── LoginPage.tsx
-    │   │   └── DashboardPage.tsx
-    │   ├── services/
-    │   │   ├── api.ts                  # Axios instance with JWT interceptor
-    │   │   ├── authService.ts
-    │   │   └── documentService.ts
-    │   ├── types/                      # Frontend type definitions
-    │   ├── App.tsx                     # Route definitions
-    │   └── index.css                   # Design system with dark mode support
-    ├── .env                            # Not committed
-    └── .env.example
-```
+  - Node.js ≥ 18
+  - npm ≥ 9
+  - A PostgreSQL database — [Neon](https://neon.tech) (free tier works)
 
----
+  ---
 
-## 4. Neon Database Setup
+  ## Neon Setup
 
-1. Create a free account at [neon.tech](https://neon.tech) and create a new project.
-2. Copy the **Connection string** from the project dashboard.  
-   Format: `postgresql://user:password@host/dbname?sslmode=require`
-3. Open the **SQL Editor** in the Neon console.
-4. Run `backend/src/db/schema.sql` — creates `users` and `documents` tables.
-5. Run `backend/src/db/seed.sql` — inserts the two test users.
+  1. Sign up at [neon.tech](https://neon.tech) and create a new project.
+  2. Copy the **Connection string** (looks like `postgresql://user:pass@host/db?sslmode=require`).
+  3. Open the **SQL Editor** in the Neon console.
+  4. Run `backend/src/db/schema.sql` — creates the `users` and `documents` tables.
+  5. Run `backend/src/db/seed.sql` — inserts the two test users.
 
----
+  ---
 
-## 5. Environment Variables
+  ## Environment Variables
 
-### `backend/.env`
+  ### Backend — `backend/.env`
 
-```env
-DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
-JWT_SECRET=replace_with_a_long_random_secret
-JWT_EXPIRES_IN=7d
-PORT=5000
-```
+  Copy from `backend/.env.example` and fill in real values.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Yes | PostgreSQL connection string (from Neon) |
-| `JWT_SECRET` | Yes | Secret used to sign and verify JWTs |
-| `JWT_EXPIRES_IN` | No | Token lifetime — defaults to `7d` |
-| `PORT` | No | Server port — defaults to `5000` |
+  | Variable | Description |
+  |----------|-------------|
+  | `DATABASE_URL` | Full PostgreSQL connection string |
+  | `JWT_SECRET` | Long random string used to sign JWTs |
+  | `JWT_EXPIRES_IN` | Token lifetime (default: `7d`) |
+  | `PORT` | Server port (default: `5000`) |
 
-Generate a secure `JWT_SECRET`:
-```bash
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-```
+  Generate a secure secret:
+  ```bash
+  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+  ```
 
-### `frontend/.env`
+  ### Frontend — `frontend/.env`
 
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
+  Copy from `frontend/.env.example`.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_API_BASE_URL` | Yes | Base URL of the Express API |
+  | Variable | Required | Description |
+  |----------|----------|-------------|
+  | `VITE_API_BASE_URL` | ✅ | Backend API URL (default: `http://localhost:5000/api`) |
 
----
+  ---
 
-## 6. Installation & Running
+  ## Setup & Running
 
-### Backend
+  ### 1. Backend
 
-```bash
-cd backend
-npm install
-cp .env.example .env      # fill in DATABASE_URL and JWT_SECRET
-npm run dev               # starts on http://localhost:5000
-```
+  ```bash
+  cd backend
+  npm install
+  cp .env.example .env        # then fill in DATABASE_URL and JWT_SECRET
+  npm run dev                  # ts-node-dev, hot reload on port 5000
+  ```
 
-### Frontend
+  Visit `http://localhost:5000` to see the API reference page.
 
-```bash
-cd frontend
-npm install
-cp .env.example .env      # set VITE_API_BASE_URL=http://localhost:5000/api
-npm run dev               # starts on http://localhost:5173
-```
+  ### 2. Frontend
 
-Both servers must be running simultaneously.
+  ```bash
+  cd frontend
+  npm install
+  cp .env.example .env        # VITE_API_BASE_URL=http://localhost:5000/api
+  npm run dev                  # Vite dev server, typically on port 5173
+  ```
 
----
+  Visit `http://localhost:5173` — redirects to `/dashboard`, then to `/login` if unauthenticated.
 
-## 7. Test Credentials
+  ---
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `admin@test.com` | `Admin1234!` |
-| User | `user@test.com` | `User1234!` |
+  ## Test Credentials
 
-Passwords are stored as bcrypt hashes (cost factor 10). Plain-text passwords are never persisted.
+  | Role | Email | Password |
+  |------|-------|----------|
+  | Admin | `admin@test.com` | `Admin1234!` |
+  | User | `user@test.com` | `User1234!` |
 
----
+  > Passwords are stored as bcrypt hashes (cost 10). Plain-text values are never persisted.
 
-## 8. API Routes Summary
+  ---
 
-| Method | Endpoint | Auth Required | Role |
-|--------|----------|---------------|------|
-| `POST` | `/api/auth/login` | No | — |
-| `GET` | `/api/health` | No | — |
-| `GET` | `/api/documents` | Yes (JWT) | ADMIN, USER |
-| `POST` | `/api/documents` | Yes (JWT) | ADMIN only |
-| `DELETE` | `/api/documents/:id` | Yes (JWT) | ADMIN only |
+  ## API Routes Summary
 
-**Request body for `POST /api/documents`:**
-```json
-{ "title": "string", "content": "string", "category": "string" }
-```
+  All `/api/documents` routes require a valid `Authorization: Bearer <token>` header.
 
-**Status codes used:**
+  | Method | Endpoint | Auth | Role | Description |
+  |--------|----------|------|------|-------------|
+  | `POST` | `/api/auth/login` | None | Any | Authenticate and receive JWT |
+  | `GET` | `/api/health` | None | Any | Server health check |
+  | `GET` | `/api/documents` | JWT | ADMIN, USER | List all documents |
+  | `POST` | `/api/documents` | JWT | ADMIN only | Create a document |
+  | `DELETE` | `/api/documents/:id` | JWT | ADMIN only | Delete a document |
 
-| Code | Meaning |
-|------|---------|
-| `200` | OK |
-| `201` | Document created |
-| `400` | Missing or invalid fields |
-| `401` | Missing, invalid, or expired token |
-| `403` | Authenticated but insufficient role |
-| `404` | Document not found |
-| `500` | Internal server error |
+  ### Status Codes
 
----
+  | Code | Meaning |
+  |------|---------|
+  | `200` | OK |
+  | `201` | Created |
+  | `400` | Bad request (missing / invalid fields) |
+  | `401` | Unauthenticated (no/invalid/expired token) |
+  | `403` | Forbidden (authenticated but insufficient role) |
+  | `404` | Document not found |
+  | `500` | Internal server error |
 
-## 9. RBAC Explanation
+  ### Example: Login
 
-Authorization is enforced by two Express middleware functions in `authMiddleware.ts`:
+  ```bash
+  curl -X POST http://localhost:5000/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"admin@test.com","password":"Admin1234!"}'
+  ```
 
-- **`protect`** — extracts the Bearer token from `Authorization` header, verifies the JWT signature and expiry, and attaches the decoded payload to `req.user`. Returns `401` if the token is absent, invalid, or expired.
-- **`requireRole(...roles)`** — checks `req.user.role` against the allowed roles. Returns `403` if the role does not match.
+  Response:
+  ```json
+  {
+    "token": "<jwt>",
+    "role": "ADMIN",
+    "user": { "id": 1, "email": "admin@test.com", "role": "ADMIN" }
+  }
+  ```
 
-Both middleware functions are applied directly on the route definitions:
+  ### Example: Forbidden (USER attempting admin action)
 
-```
-GET  /api/documents  →  protect, requireRole('ADMIN', 'USER')
-POST /api/documents  →  protect, requireRole('ADMIN')
-DEL  /api/documents  →  protect, requireRole('ADMIN')
-```
+  ```bash
+  curl -X POST http://localhost:5000/api/documents \
+    -H "Authorization: Bearer <user-jwt>" \
+    -H "Content-Type: application/json" \
+    -d '{"title":"Test","content":"...","category":"General"}'
+  ```
 
-The frontend conditionally renders the create form and delete buttons based on the user's role. This is a UI convenience only. Any request sent without the required role — regardless of how it is made — will be rejected by the server with a `403` response.
+  Response `403`:
+  ```json
+  { "message": "Forbidden: insufficient role" }
+  ```
 
----
+  ---
 
-## 10. Deployment Notes
+  ## RBAC Summary
 
-**Frontend** — deploy the Vite production build to [Vercel](https://vercel.com) or [Netlify](https://netlify.com):
-```bash
-cd frontend && npm run build   # outputs to frontend/dist/
-```
-Set `VITE_API_BASE_URL` to the deployed backend URL in the host's environment settings.
+  Security is enforced **at the backend middleware layer**, not just in the UI.
 
-**Backend** — deploy to [Railway](https://railway.app), [Render](https://render.com), or [Fly.io](https://fly.io):
-```bash
-cd backend && npm run build && npm start
-```
-Set all environment variables via the host's secrets manager — not in a committed `.env` file.
+  ```
+  protect          → verifies JWT signature and expiry → attaches req.user
+  requireRole(...) → checks req.user.role against allowed roles → 403 if not matched
+  ```
 
-**Database** — Neon free tier is sufficient for this project. Ensure `sslmode=require` remains in `DATABASE_URL` in production. Update the CORS origin in `backend/src/index.ts` to match the deployed frontend domain.
+  Frontend role restrictions (hiding the create form and delete buttons for `USER`) are a UI convenience only. The server will reject any out-of-role request regardless.
+
+  ---
+
+  ## Deployment Recommendations
+
+  | Concern | Recommendation |
+  |---------|---------------|
+  | Backend hosting | Railway, Render, or Fly.io (free tiers available) |
+  | Frontend hosting | Vercel or Netlify (Vite builds to `/dist`) |
+  | Database | Neon free tier (already configured) |
+  | `JWT_SECRET` in prod | Set via host's environment secrets, never in `.env` committed to git |
+  | CORS | Update `cors` origin in `backend/src/index.ts` to your deployed frontend URL |
+  | HTTPS | All major hosts provide SSL automatically — ensure `sslmode=require` stays in `DATABASE_URL` |
+
+  ### Production Build Commands
+
+  ```bash
+  # Backend (compile TypeScript)
+  cd backend && npm run build && npm start
+
+  # Frontend (Vite production bundle)
+  cd frontend && npm run build
+  # Output in frontend/dist/ — deploy this folder
+  ```
