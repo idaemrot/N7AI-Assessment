@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { isAxiosError } from 'axios';
-import { CreateDocumentPayload } from '../../services/documentService';
+import { CreateDocumentPayload } from '../services/documentService';
 
 interface CreateDocumentFormProps {
   onSuccess: (payload: CreateDocumentPayload) => Promise<void>;

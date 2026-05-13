@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Document } from '../../types';
+import { Document } from '../types';
 
 interface DocumentListProps {
   documents: Document[];
