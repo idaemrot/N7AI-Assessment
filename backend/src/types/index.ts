@@ -1,29 +1,60 @@
-// Shared TypeScript types for the backend
+// ── Database row shapes ────────────────────────────────────────────────────
 
-export interface User {
+export type UserRole = 'ADMIN' | 'USER';
+
+/** Mirrors the `users` table row returned from pg queries. */
+export interface UserRow {
   id: number;
-  username: string;
   email: string;
+  password: string; // bcrypt hash — never expose in responses
+  role: UserRole;
   created_at: Date;
 }
 
-export interface Document {
+/** Safe user object (password stripped) returned in API responses. */
+export interface UserPublic {
   id: number;
-  user_id: number;
+  email: string;
+  role: UserRole;
+}
+
+/** Mirrors the `documents` table row. */
+export interface DocumentRow {
+  id: number;
   title: string;
   content: string;
+  category: string;
   created_at: Date;
 }
 
+// ── JWT ────────────────────────────────────────────────────────────────────
+
+/** Shape of the payload encoded into every JWT token. */
 export interface JwtPayload {
   id: number;
   email: string;
+  role: UserRole;
 }
 
-// Extend Express Request to carry authenticated user
+// ── Auth ───────────────────────────────────────────────────────────────────
+
+export interface LoginRequestBody {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  role: UserRole;
+  user: UserPublic;
+}
+
+// ── Extend Express Request ─────────────────────────────────────────────────
+
 declare global {
   namespace Express {
     interface Request {
+      /** Set by `protect` middleware after successful JWT verification. */
       user?: JwtPayload;
     }
   }

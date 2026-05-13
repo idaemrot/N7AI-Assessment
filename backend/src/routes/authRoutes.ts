@@ -1,8 +1,12 @@
 import { Router } from 'express';
+import { login } from '../controllers/authController';
 
 const router = Router();
 
-// Routes to be implemented
-// router.post('/login', login);
+/**
+ * POST /api/auth/login
+ * Body: { email: string, password: string }
+ */
+router.post('/login', login);
 
 export default router;
