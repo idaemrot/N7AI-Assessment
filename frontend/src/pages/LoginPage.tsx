@@ -44,6 +44,19 @@ export default function LoginPage() {
         <h1 className="login-heading">Sign in to your account</h1>
         <p className="login-tagline">Document management for your team.</p>
 
+        {/* Test credentials hint ─────────────────────────────────────── */}
+        <div className="login-credentials">
+          <p className="login-credentials-label">Test credentials</p>
+          <div className="login-credentials-row">
+            <span className="login-cred-role">Admin</span>
+            <span className="login-cred-value">admin@test.com / Admin1234!</span>
+          </div>
+          <div className="login-credentials-row">
+            <span className="login-cred-role">User</span>
+            <span className="login-cred-value">user@test.com / User1234!</span>
+          </div>
+        </div>
+
         <form className="login-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="email">Email</label>

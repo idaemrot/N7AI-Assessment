@@ -176,8 +176,49 @@ body {
 .login-tagline {
   font-size: 13px;
   color: var(--gray-500);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
   line-height: 1.4;
+}
+
+/* ── Test credentials hint ─────────────────────────────────────────────── */
+.login-credentials {
+  border: var(--border-hair) dashed var(--gray-300);
+  border-radius: var(--radius);
+  padding: 0.625rem 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.login-credentials-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-400);
+  margin-bottom: 3px;
+}
+
+.login-credentials-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-cred-role {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-500);
+  width: 34px;
+  flex-shrink: 0;
+}
+
+.login-cred-value {
+  font-size: 11px;
+  color: var(--gray-600);
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  letter-spacing: 0.01em;
 }
 
 /* ── Form primitives (shared login + create) ───────────────────────────── */
