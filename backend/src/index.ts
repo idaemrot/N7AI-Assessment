@@ -127,7 +127,6 @@ app.get('/', (_req, res) => {
   <div class="container">
 
     <header class="header">
-      <div class="mark">API</div>
       <h1>Document API</h1>
       <p class="subtitle">Express · TypeScript · PostgreSQL · JWT</p>
       <div class="status-row">

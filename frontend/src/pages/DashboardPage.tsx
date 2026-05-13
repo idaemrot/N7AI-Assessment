@@ -140,7 +140,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="dashboard-main">
+      <main className={`dashboard-main${isAdmin ? ' dashboard-main--admin' : ' dashboard-main--user'}`}>
 
         {/* ── Create form — ADMIN only ──────────────────────────────────── */}
         {isAdmin && (

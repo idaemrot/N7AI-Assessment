@@ -34,60 +34,56 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+      <div className="login-box">
 
-      {/* ── Left panel ─────────────────────────────────────────────────── */}
-      <div className="login-panel">
-        <p className="login-panel-label">Document Portal</p>
-        <p className="login-panel-tagline">Manage your documents in one place.</p>
-      </div>
-
-      {/* ── Right panel — form ──────────────────────────────────────────── */}
-      <div className="login-form-panel">
-        <div className="login-form-inner">
-          <h1 className="login-heading">Sign in</h1>
-
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-
-            {error && (
-              <p className="login-error" role="alert">{error}</p>
-            )}
-
-            <button
-              id="login-submit"
-              type="submit"
-              className="login-btn"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in…' : 'Sign in'}
-            </button>
-          </form>
+        {/* Brand ─────────────────────────────────────────────────────── */}
+        <div className="login-brand">
+          <span className="login-brand-name">DocPortal</span>
         </div>
-      </div>
 
+        <h1 className="login-heading">Sign in to your account</h1>
+        <p className="login-tagline">Document management for your team.</p>
+
+        <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          {error && (
+            <p className="login-error" role="alert">{error}</p>
+          )}
+
+          <button
+            id="login-submit"
+            type="submit"
+            className="login-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
