@@ -1,11 +1,201 @@
+/* ── Reset ─────────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ── Base ──────────────────────────────────────────────────────────────── */
 body {
-  font-family: sans-serif;
-  background-color: #f9f9f9;
-  color: #1a1a1a;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* ── Login page ────────────────────────────────────────────────────────── */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.login-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-group input:disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+}
+
+/* ── Error message ─────────────────────────────────────────────────────── */
+.login-error {
+  font-size: 0.875rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+}
+
+/* ── Login button ──────────────────────────────────────────────────────── */
+.login-btn {
+  margin-top: 0.25rem;
+  padding: 0.625rem 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.login-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.login-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* ── Dashboard ─────────────────────────────────────────────────────────── */
+.dashboard-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.logout-btn {
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.logout-btn:hover {
+  background: #f3f4f6;
+}
+
+.dashboard-main {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-welcome {
+  font-size: 0.9375rem;
+  color: #374151;
+}
+
+/* ── Role badge ────────────────────────────────────────────────────────── */
+.role-badge {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.role-badge--admin {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.role-badge--user {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.dashboard-note {
+  font-size: 0.875rem;
+  color: #6b7280;
 }
